@@ -1,1 +1,2 @@
 # ciachiblysk.pl
+# Przerwa techniczna
