@@ -11,6 +11,86 @@
 <!-- Font Google -->
 <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  function initComparisons() {
+    var x, i;
+    /*find all elements with an "overlay" class:*/
+    x = document.getElementsByClassName("img-comp-overlay");
+    for (i = 0; i < x.length; i++) {
+      /*once for each "overlay" element:
+      pass the "overlay" element as a parameter when executing the compareImages function:*/
+      compareImages(x[i]);
+    }
+    function compareImages(img) {
+      var slider, img, clicked = 0, w, h;
+      /*get the width and height of the img element*/
+      w = img.offsetWidth;
+      h = img.offsetHeight;
+      /*set the width of the img element to 50%:*/
+      img.style.width = (w / 2) + "px";
+      /*create slider:*/
+      slider = document.createElement("DIV");
+      slider.setAttribute("class", "img-comp-slider");
+      /*insert slider*/
+      img.parentElement.insertBefore(slider, img);
+      /*position the slider in the middle:*/
+      slider.style.top = (h / 2) - (slider.offsetHeight / 2) + "px";
+      slider.style.left = (w / 2) - (slider.offsetWidth / 2) + "px";
+      /*execute a function when the mouse button is pressed:*/
+      slider.addEventListener("mousedown", slideReady);
+      /*and another function when the mouse button is released:*/
+      window.addEventListener("mouseup", slideFinish);
+      /*or touched (for touch screens:*/
+      slider.addEventListener("touchstart", slideReady);
+      /*and released (for touch screens:*/
+      window.addEventListener("touchend", slideFinish);
+      function slideReady(e) {
+        /*prevent any other actions that may occur when moving over the image:*/
+        e.preventDefault();
+        /*the slider is now clicked and ready to move:*/
+        clicked = 1;
+        /*execute a function when the slider is moved:*/
+        window.addEventListener("mousemove", slideMove);
+        window.addEventListener("touchmove", slideMove);
+      }
+      function slideFinish() {
+        /*the slider is no longer clicked:*/
+        clicked = 0;
+      }
+      function slideMove(e) {
+        var pos;
+        /*if the slider is no longer clicked, exit this function:*/
+        if (clicked == 0) return false;
+        /*get the cursor's x position:*/
+        pos = getCursorPos(e)
+        /*prevent the slider from being positioned outside the image:*/
+        if (pos < 0) pos = 0;
+        if (pos > w) pos = w;
+        /*execute a function that will resize the overlay image according to the cursor:*/
+        slide(pos);
+      }
+      function getCursorPos(e) {
+        var a, x = 0;
+        e = (e.changedTouches) ? e.changedTouches[0] : e;
+        /*get the x positions of the image:*/
+        a = img.getBoundingClientRect();
+        /*calculate the cursor's x coordinate, relative to the image:*/
+        x = e.pageX - a.left;
+        /*consider any page scrolling:*/
+        x = x - window.pageXOffset;
+        return x;
+      }
+      function slide(x) {
+        /*resize the image:*/
+        img.style.width = x + "px";
+        /*position the slider:*/
+        slider.style.left = img.offsetWidth - (slider.offsetWidth / 2) + "px";
+      }
+    }
+  }
+  </script>
+
 </head>
 
 <body>
@@ -23,8 +103,9 @@
         <li class="nav-item"> <a class="nav-link" href="" data-scroll-nav="0">STRONA GŁÓWNA</a> </li>
         <li class="nav-item"> <a class="nav-link" href="#" data-scroll-nav="1">O NAS</a> </li>
         <li class="nav-item"> <a class="nav-link" href="#" data-scroll-nav="2">USŁUGI</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="#" data-scroll-nav="4">OPINIE</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="#" data-scroll-nav="5">CENNIK</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="#" data-scroll-nav="3">OPINIE</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="#" data-scroll-nav="4">CENNIK</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="#" data-scroll-nav="5">REALIZACJE</a> </li>
         <li class="nav-item"> <a class="nav-link" href="#" data-scroll-nav="6">KONTAKT</a> </li>
       </ul>
     </div>
@@ -156,7 +237,7 @@
 <!-------Features End-------> 
 
 <!-------Testimonial Start------->
-<section class="testimonial section-padding" data-scroll-index='4'>
+<section class="testimonial section-padding" data-scroll-index='3'>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -205,7 +286,7 @@
 <!-------Testimonial End-------> 
 
 <!-------FAQ Start------->
-<section class="faq section-padding prelative" data-scroll-index='5'>
+<section class="faq section-padding prelative" data-scroll-index='4'>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -227,6 +308,60 @@
 </section>
 
 <!-------FAQ End-------> 
+
+<!-------Realizacje Start------->
+<section class="download section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="sectioner-header text-center white">
+          <h8>REALIZACJE</h8>
+          <span class="line2"></span>
+          <p class="white"></p>
+        </div>
+      </div>
+    </div>
+    <div class="section-content text-center">
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <div class="media single-feature wow fadeInUp" data-wow-delay="0.2s">
+            <div class="media-body text-right media-right-margin">
+              <img src="images/4.jpg" width="400" height="400"></div>
+          </div>
+          <div class="media single-feature wow fadeInUp" data-wow-delay="0.2s">
+            <div class="media-body text-right media-right-margin">
+              <img src="images/3.jpg" width="400" height="400">
+            </div>
+          </div>
+          <div class="media single-feature wow fadeInUp" data-wow-delay="0.2s">
+            <div class="media-body text-right media-right-margin">
+              <img src="images/5.jpg" width="400" height="400">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="media single-feature wow fadeInUp" data-wow-delay="0.4s">
+            <div class="media-body text-left">
+              <img src="images/2.jpg" width="400" height="400">
+            </div>
+          </div>
+          <div class="media single-feature wow fadeInUp" data-wow-delay="0.4s">
+            <div class="media-body text-left">
+              <img src="images/6.jpg" width="400" height="400">
+            </div>
+          </div>
+          <div class="media single-feature wow fadeInUp" data-wow-delay="0.4s">
+            <div class="media-body text-left">
+              <img src="images/1.jpg" width="400" height="400">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-------Realizacje End-------> 
 
 <!-------Contact Start------->
 <section class="contact section-padding" data-scroll-index='6'>

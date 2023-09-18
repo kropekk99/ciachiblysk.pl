@@ -8,10 +8,10 @@ body {
 	background-color: #000000;
 }
 a {
-	color:#000000;
+	color:#ffffff;
 }
 a:hover {
-	color:#000000;
+	color:#ff0000;
 }
 .tytul{
 	color:#ffffff;
@@ -127,7 +127,7 @@ h8{
 .banner {
 	background: #000000;
 	background: linear-gradient(to top, #000000, #000000 10%, #ff0202);
-	padding: 100px 0px;
+	padding-top: 100px;
 	position:relative;
 }
 .banner::before {
@@ -222,7 +222,7 @@ h8{
 	font-size: 17px;
 }
 .section-content {
-	margin-top: 80px;
+	margin-top: 40px;
 }
 .icon-box {
 	margin-bottom:50px;
@@ -351,7 +351,6 @@ h8{
 .testimonial {
 	background: #000000;
 	background: linear-gradient(to left, #ff0000, #350101);
-	padding:100px 0px;
 	position:relative;
 }
 .testimonial::before {
@@ -387,8 +386,9 @@ h8{
 }
 .slider .test-img img {
 	border-radius: 50%;
-	width: 100%;
+	width: 75%;
 	height: auto;
+	
 }
 .test-img {
 	float: left;
@@ -491,7 +491,6 @@ input {
 .download {
 	background: #ff0000;
 	background: linear-gradient(to left, #ff0000, #350101);
-	padding:100px 0px;
 	position:relative;
 }
 .download::before {
@@ -518,8 +517,8 @@ input {
 	border-radius: 7px;
 }
 .footer-copy {
-	background: #ffffff;
-	color: #242424;
+	background: #000000;
+	color: #ffffff;
 	font-size: 13px;
 	text-align: center;
 	padding:15px 0px;
