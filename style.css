@@ -502,6 +502,20 @@ input {
 	width: 100%;
 	height: 100%;
 }
+.realizacje {
+	background: #ff0000;
+	background: linear-gradient(to left, #ff0000, #350101);
+	position:relative;
+}
+.realizacje::before {
+	content: "";
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
 .download ul {
 	list-style: none;
 }
