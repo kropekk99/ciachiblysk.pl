@@ -99,7 +99,7 @@ h8{
 	display: none;
 }
 .nav-scroll {
-	background: rgb(255, 0, 0);
+	background: #dd0000;
 	-webkit-box-shadow: 0 1px 8px 3px rgba(0, 0, 0, 0.0509803922);
 	box-shadow: 0 1px 8px 3px rgba(0, 0, 0, 0.0509803922);
 	-webkit-transition: all .4s ease;
@@ -325,11 +325,18 @@ h8{
 	margin-bottom: 80px;
 	margin-top: 40px;
 }
+.double-feature {
+	margin-bottom: auto;
+	margin-top: auto;
+}
 .single-feature h5 {
 	font-size: 16px;
 }
 .media-right-margin {
 	margin-right:25px;
+}
+.media-center-margin {
+	margin-right:18px;
 }
 .single-feature p {
 	font-size: 13px;
@@ -594,6 +601,10 @@ h3 {
 .single-feature {
 	margin-bottom: 20px;
 	margin-top: 20px;
+}
+.double-feature {
+	margin-bottom: 80px;
+	margin-top: 80px;
 }
 .team-detail {
 	margin-top: 20px;
