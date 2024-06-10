@@ -14,6 +14,15 @@
 </head>
 
 <body>
+
+<div id="popup">
+    <span id="popupclose">X</span>
+    <div class="popupcontent">
+      
+    </div>
+</div>
+
+
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg">
   <div class="container"> <a class="navbar-brand navbar-logo" href="#"> <img src="images/logo.png" alt="logo" class="logo-1"> </a>
@@ -476,6 +485,18 @@
 <script src="js/scrollIt.min.js"></script> 
 <script src="js/wow.min.js"></script> 
 <script>
+
+// Initialize Variables
+var closePopup = document.getElementById("popupclose");
+var overlay = document.getElementById("overlay");
+var popup = document.getElementById("popup");
+ 
+// Close Popup Event
+closePopup.onclick = function() {
+  document.getElementById('popup').setAttribute("id", "popup1");
+};
+
+
 	wow = new WOW();
 	wow.init();
 $(document).ready(function(e) {
