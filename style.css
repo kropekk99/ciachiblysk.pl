@@ -107,8 +107,6 @@ h8{
 .navbar .active {
 	color: #eeff00 !important;
 }
-.navbar .navbar-brand {
-}
 .navbar .nav-item {
 	margin: 0 5px;
 	padding: 0;
@@ -375,8 +373,7 @@ h8{
 	font-size: 13px;
 	color:#ffffff
 }
-.icon-border {
-}
+
 .icon-border span {
 	display: block;
 	position: relative;
