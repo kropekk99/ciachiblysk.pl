@@ -104,7 +104,7 @@
       <div class="video-popup">
         <div class="video-src">
           <div class="iframe-src">
-            <video src="images/film.mov" type="viceo/mov" controls onloadstart="this.volume=0.25" preload="auto"> </video>
+            <video src="images/film.mp4" controls onloadstart="this.volume=0.25" preload="auto"> </video>
           </div>
         </div>
       </div>
@@ -351,49 +351,34 @@
         <div class="sectioner-header text-center white">
           <h8>REALIZACJE</h8>
           <span class="line2"></span>
-          <p class="white"></p>
         </div>
       </div>
     </div>
-    <div class="section-content text-center">
-      <div class="row">
-        <div class="col-md-6 col-sm-12">
-          <div class="media single-feature wow fadeInUp" data-wow-delay="0.2s">
-            <div class="media-body text-right media-right-margin">
-              <img src="images/22.JPEG" width="400" height="400" style="max-width: 100%; height: auto;"></div>
-          </div>
-          <div class="media single-feature wow fadeInUp" data-wow-delay="0.2s">
-            <div class="media-body text-right media-right-margin">
-              <img src="images/13.JPEG" width="400" height="400" style="max-width: 100%; height: auto;">
-            </div>
-          </div>
-          <div class="media single-feature wow fadeInUp" data-wow-delay="0.2s">
-            <div class="media-body text-right media-right-margin">
-              <img src="images/66.JPEG" width="400" height="400" style="max-width: 100%; height: auto;">
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="media single-feature wow fadeInUp" data-wow-delay="0.4s">
-            <div class="media-body text-left">
-              <img src="images/2.jpg" width="400" height="400" style="max-width: 100%; height: auto;">
-            </div>
-          </div>
-          <div class="media single-feature wow fadeInUp" data-wow-delay="0.4s">
-            <div class="media-body text-left">
-              <img src="images/44.JPEG" width="400" height="400" style="max-width: 100%; height: auto;">
-            </div>
-          </div>
-          <div class="media single-feature wow fadeInUp" data-wow-delay="0.4s">
-            <div class="media-body text-left">
-              <img src="images/33.JPEG" width="400" height="400" style="max-width: 100%; height: auto;">
-            </div>
-          </div>
-        </div>
+
+    <div class="row">
+      <!-- Każdy obrazek w osobnej kolumnie -->
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <img src="images/22.JPEG" class="img-fluid rounded shadow-sm mx-auto d-block" alt="Realizacja 1">
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <img src="images/13.JPEG" class="img-fluid rounded shadow-sm mx-auto d-block" alt="Realizacja 2">
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <img src="images/66.JPEG" class="img-fluid rounded shadow-sm mx-auto d-block" alt="Realizacja 3">
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <img src="images/2.jpg" class="img-fluid rounded shadow-sm mx-auto d-block" alt="Realizacja 4">
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <img src="images/44.JPEG" class="img-fluid rounded shadow-sm mx-auto d-block" alt="Realizacja 5">
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <img src="images/33.JPEG" class="img-fluid rounded shadow-sm mx-auto d-block" alt="Realizacja 6">
       </div>
     </div>
   </div>
 </section>
+
 
 <!-------Realizacje End-------> 
 
@@ -472,6 +457,25 @@
   </div>
 </section>
 
+<!-----CALL TO ACTION Button-->
+<div class="mobile-cta">
+  <button id="ctaButton">
+    <i class="fa fa-phone"></i> Skontaktuj się
+  </button>
+</div>
+
+<!-- Modal CTA -->
+<div id="ctaModal" class="cta-modal">
+  <div class="cta-modal-content">
+    <h5>Skontaktuj się z nami</h5>
+    <p>Wybierz, co chcesz zrobić:</p>
+    <a href="tel:+48728974902" class="cta-option call">📞 Zadzwoń teraz</a>
+    <a href="kontakt.vcf" class="cta-option save" download>💾 Dodaj kontakt</a>
+    <button id="closeCtaModal" class="cta-close">Anuluj</button>
+  </div>
+</div>
+
+
 <!-------Download End------->
 
 <footer class="footer-copy">
@@ -488,87 +492,104 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script> 
 <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script> 
-<!-- scrollIt js --> 
 <script src="js/scrollIt.min.js"></script> 
 <script src="js/wow.min.js"></script> 
+
 <script>
+  // init wow + slider + video popup (Twoja istniejąca logika zachowana)
+  wow = new WOW();
+  wow.init();
 
-// Initialize Variables
-var closePopup = document.getElementById("popupclose");
-var overlay = document.getElementById("overlay");
-var popup = document.getElementById("popup");
- 
-// Close Popup Event
-closePopup.onclick = function() {
-  document.getElementById('popup').setAttribute("id", "popup1");
-};
+  $(document).ready(function() {
+    $('#video-icon').on('click', function(e){
+      e.preventDefault();
+      $('.video-popup').css('display','flex');
+      $('.iframe-src').slideDown();
+    });
+    $('.video-popup').on('click', function(e){
+      var $target = e.target.nodeName;
+      var video_src = $(this).find('iframe').attr('src');
+      if ($target != 'IFRAME') {
+        $('.video-popup').fadeOut();
+        $('.iframe-src').slideUp();
+        $('.video-popup iframe').attr('src', " ");
+        $('.video-popup iframe').attr('src', video_src);
+      }
+    });
 
+    $('.slider').bxSlider({ pager: false });
+  });
 
-	wow = new WOW();
-	wow.init();
-$(document).ready(function(e) {
+  // -- NAVBAR: prosty, niezawodny skrypt do zmiany tła po scrollu --
+  (function($){
+    function checkNavbar() {
+      var navbar = $(".navbar");
+      if (!navbar.length) return;
+      if ($(window).scrollTop() > 50) {
+        navbar.addClass("nav-scroll");
+      } else {
+        navbar.removeClass("nav-scroll");
+      }
+    }
 
-	$('#video-icon').on('click',function(e){
-	e.preventDefault();
-	$('.video-popup').css('display','flex');
-	$('.iframe-src').slideDown();
-	});
-	$('.video-popup').on('click',function(e){
-	var $target = e.target.nodeName;
-	var video_src = $(this).find('iframe').attr('src');
-	if($target != 'IFRAME'){
-	$('.video-popup').fadeOut();
-	$('.iframe-src').slideUp();
-	$('.video-popup iframe').attr('src'," ");
-	$('.video-popup iframe').attr('src',video_src);
-	}
-	});
+    // sprawdź od razu po załadowaniu strony
+    $(window).on("load", function(){
+      checkNavbar();
+    });
 
-	$('.slider').bxSlider({
-	pager: false
-	});
-});
-    
-$(window).on("scroll",function () {
+    // sprawdzaj przy scrollu (wydajne)
+    var ticking = false;
+    $(window).on("scroll", function(){
+      if (!ticking) {
+        window.requestAnimationFrame(function() {
+          checkNavbar();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  })(jQuery);
 
-	var bodyScroll = $(window).scrollTop(),
-	navbar = $(".navbar");
-	
-	if(bodyScroll > 50){
-	$('.navbar-logo img').attr('src','images/logo-black.png');
-	navbar.addClass("nav-scroll");
-
-}else{
-	$('.navbar-logo img').attr('src','images/logo.png');
-	navbar.removeClass("nav-scroll");
-}
-
-});
-$(window).on("load",function (){
-	var bodyScroll = $(window).scrollTop(),
-	navbar = $(".navbar");
-	
-	if(bodyScroll > 50){
-	$('.navbar-logo img').attr('src','images/logo-black.png');
-	navbar.addClass("nav-scroll");
-	}else{
-	$('.navbar-logo img').attr('src','images/logo-white.png');
-	navbar.removeClass("nav-scroll");
-	}
-
-	$.scrollIt({
-	
-	easing: 'swing',      // the easing function for animation
-	scrollTime: 900,       // how long (in ms) the animation takes
-	activeClass: 'active', // class given to the active nav element
-	onPageChange: null,    // function(pageIndex) that is called when page is changed
-	topOffset: -63
-	});
-});
-
-
-
+  // opcjonalnie: inicjalizacja scrollIt jeśli używasz
+  $(window).on("load", function(){
+    $.scrollIt({
+      easing: 'swing',
+      scrollTime: 900,
+      activeClass: 'active',
+      onPageChange: null,
+      topOffset: -63
+    });
+  });
 </script>
+
+<script>
+  // CTA popup
+  const ctaButton = document.getElementById('ctaButton');
+  const ctaModal = document.getElementById('ctaModal');
+  const closeCtaModal = document.getElementById('closeCtaModal');
+
+  if (ctaButton) {
+    ctaButton.addEventListener('click', () => {
+      ctaModal.style.display = 'flex';
+    });
+  }
+
+  if (closeCtaModal) {
+    closeCtaModal.addEventListener('click', () => {
+      ctaModal.style.display = 'none';
+    });
+  }
+
+  window.addEventListener('click', (e) => {
+    if (e.target === ctaModal) {
+      ctaModal.style.display = 'none';
+    }
+  });
+</script>
+
+
+
+
 </body>
 </html>
 
