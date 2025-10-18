@@ -102,6 +102,8 @@ h8{
 	min-height: 50px;
 	line-height: 50px;
 	background: transparent;
+	transition: background-color 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
+  -webkit-transition: background-color 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
 	z-index: 1030;
 }
 .navbar .active {
@@ -134,12 +136,10 @@ h8{
 	display: none;
 }
 .nav-scroll {
-	background: #dd0000;
-	-webkit-box-shadow: 0 1px 8px 3px rgba(0, 0, 0, 0.0509803922);
-	box-shadow: 0 1px 8px 3px rgba(0, 0, 0, 0.0509803922);
-	-webkit-transition: all .4s ease;
-	transition: all .4s ease;
-}
+	background-color: rgba(221, 0, 0, 0.98) !important; /* intensywna czerwień, prawie nieprzezroczysta */
+	box-shadow: 0 2px 12px rgba(0,0,0,0.30) !important;
+	backdrop-filter: blur(2px); /* opcjonalne, ładny efekt */
+  }
 .nav-scroll .navbar-nav > li > a {
 	color: #ffffff;
 }
@@ -692,3 +692,101 @@ h3 {
 	max-width: 100%;
 	height: auto;
 }
+
+/* ====== CTA PRZYCISK MOBILNY ====== */
+.mobile-cta {
+	display: none; /* domyślnie ukryty na desktopie */
+  }
+  
+  @media only screen and (max-width: 768px) {
+	.mobile-cta {
+	  position: fixed;
+	  bottom: 15px;
+	  left: 0;
+	  right: 0;
+	  text-align: center;
+	  z-index: 2000;
+	}
+  
+	.mobile-cta button {
+	  background-color: #dd0000;
+	  color: #fff;
+	  border: none;
+	  padding: 14px 30px;
+	  border-radius: 50px;
+	  font-size: 17px;
+	  font-weight: 600;
+	  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+	  cursor: pointer;
+	  transition: background 0.3s ease, transform 0.2s ease;
+	}
+  
+	.mobile-cta button:hover {
+	  background-color: #b80000;
+	  transform: scale(1.05);
+	}
+  
+	.mobile-cta i {
+	  margin-right: 8px;
+	}
+  }
+  
+  /* ====== CTA MODAL ====== */
+  .cta-modal {
+	display: none; 
+	position: fixed;
+	z-index: 3000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.6);
+	justify-content: center;
+	align-items: center;
+  }
+  
+  .cta-modal-content {
+	background-color: #fff;
+	color: #000;
+	padding: 20px;
+	border-radius: 10px;
+	text-align: center;
+	width: 85%;
+	max-width: 320px;
+	animation: fadeIn 0.3s ease;
+  }
+  
+  .cta-option {
+	display: block;
+	margin: 10px 0;
+	padding: 12px;
+	border-radius: 8px;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 16px;
+  }
+  
+  .cta-option.call {
+	background-color: #dd0000;
+	color: #fff;
+  }
+  
+  .cta-option.save {
+	background-color: #f3f3f3;
+	color: #000;
+  }
+  
+  .cta-close {
+	margin-top: 10px;
+	background: none;
+	border: none;
+	color: #666;
+	font-weight: 500;
+	cursor: pointer;
+  }
+  
+  @keyframes fadeIn {
+	from { opacity: 0; transform: scale(0.95); }
+	to { opacity: 1; transform: scale(1); }
+  }
+  
