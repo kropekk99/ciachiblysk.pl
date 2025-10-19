@@ -501,30 +501,121 @@ input {
 	background: linear-gradient(to left, #ff0000, #350101);
 	cursor:pointer;
 }
-.contact-info {
-	padding: 2rem 2rem 1rem;
-	border-radius: 8px;
-	background: #ff0000;
-	background: linear-gradient(to left, #ff0000, #350101);
+/* ===== KONTAKT – poprawiona wersja (czarne tło, równy box) ===== */
+.contact {
+  background-color: #000;
+  color: #fff;
 }
+
+.contact .sectioner-header h3 {
+  color: #ff0000;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.contact .line {
+  background: #ff0000;
+}
+
+.map-container {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(255,0,0,0.25);
+  height: 100%;
+}
+
+/* Box kontaktowy o tej samej wysokości co mapa */
+.contact-box {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Układ kontaktów */
 .contact-item {
-	margin:23px 0px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
 }
+
 .contact-item i {
-	font-size: 25px;
+  color: #ff0000;
+  flex-shrink: 0;
+  margin-top: 4px;
 }
-.contact-item p {
-	line-height: 20px;
-	font-size: 16px;
-	font-weight: bold;
-	color:#bbb9b9;
-	margin: 0;
+
+.contact-text p {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 1.15rem;
 }
-.contact-item x {
-	line-height: 20px;
-	font-size: 14px;
-	margin: 0;
+
+.contact-item a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
+
+.contact-item a:hover {
+  color: #ffe600;
+  text-decoration: underline;
+}
+
+/* Dostosowanie wysokości mapy i boxa */
+@media (min-width: 992px) {
+  .contact .row.align-items-center {
+    align-items: stretch !important;
+  }
+  .map-container iframe {
+    height: 100%;
+    min-height: 400px;
+  }
+}
+
+/* ✅ Responsywny układ (mobile) */
+@media (max-width: 768px) {
+  .contact .sectioner-header {
+    width: 100%;
+  }
+
+  .contact-box {
+    text-align: center;
+    height: auto;
+    padding: 30px 20px;
+  }
+
+  .contact-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .contact-item i {
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+  }
+
+  /* Większa czcionka kontaktów na mobile */
+  .contact-text p,
+  .contact-text a {
+    font-size: 1rem;
+  }
+
+  .contact-text .font-weight-bold {
+    font-size: 1.15rem;
+  }
+
+  .map-container {
+    margin-bottom: 25px;
+  }
+}
+
+
+
 .download {
 	background: #ff0000;
 	background: linear-gradient(to left, #ff0000, #350101);
@@ -691,102 +782,77 @@ h3 {
 .img-fluid {
 	max-width: 100%;
 	height: auto;
+}  
+
+/* ===== SOCIAL MEDIA ===== */
+
+.social {
+  background: linear-gradient(to left, #ff0000, #350101);
+  color: #fff;
 }
 
-/* ====== CTA PRZYCISK MOBILNY ====== */
-.mobile-cta {
-	display: none; /* domyślnie ukryty na desktopie */
+.social .sectioner-header h8 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.social .sectioner-header p {
+  color: #fff;
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+
+.social .section-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 30px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.social .section-content ul li {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.social .section-content ul li:hover {
+  transform: scale(1.1);
+  opacity: 0.85;
+}
+
+.social .section-content ul li img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .social .sectioner-header h8 {
+    font-size: 1.6rem;
   }
-  
-  @media only screen and (max-width: 768px) {
-	.mobile-cta {
-	  position: fixed;
-	  bottom: 15px;
-	  left: 0;
-	  right: 0;
-	  text-align: center;
-	  z-index: 2000;
-	}
-  
-	.mobile-cta button {
-	  background-color: #dd0000;
-	  color: #fff;
-	  border: none;
-	  padding: 14px 30px;
-	  border-radius: 50px;
-	  font-size: 17px;
-	  font-weight: 600;
-	  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-	  cursor: pointer;
-	  transition: background 0.3s ease, transform 0.2s ease;
-	}
-  
-	.mobile-cta button:hover {
-	  background-color: #b80000;
-	  transform: scale(1.05);
-	}
-  
-	.mobile-cta i {
-	  margin-right: 8px;
-	}
+
+  .social .section-content ul {
+    gap: 25px;
   }
-  
-  /* ====== CTA MODAL ====== */
-  .cta-modal {
-	display: none; 
-	position: fixed;
-	z-index: 3000;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0,0,0,0.6);
-	justify-content: center;
-	align-items: center;
+
+  .social .section-content ul li img {
+    width: 80px;
+    height: 80px;
   }
-  
-  .cta-modal-content {
-	background-color: #fff;
-	color: #000;
-	padding: 20px;
-	border-radius: 10px;
-	text-align: center;
-	width: 85%;
-	max-width: 320px;
-	animation: fadeIn 0.3s ease;
+
+  .social .sectioner-header p {
+    font-size: 1rem;
   }
-  
-  .cta-option {
-	display: block;
-	margin: 10px 0;
-	padding: 12px;
-	border-radius: 8px;
-	text-decoration: none;
-	font-weight: 600;
-	font-size: 16px;
-  }
-  
-  .cta-option.call {
-	background-color: #dd0000;
-	color: #fff;
-  }
-  
-  .cta-option.save {
-	background-color: #f3f3f3;
-	color: #000;
-  }
-  
-  .cta-close {
-	margin-top: 10px;
-	background: none;
-	border: none;
-	color: #666;
-	font-weight: 500;
-	cursor: pointer;
-  }
-  
-  @keyframes fadeIn {
-	from { opacity: 0; transform: scale(0.95); }
-	to { opacity: 1; transform: scale(1); }
-  }
-  
+}
