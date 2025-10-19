@@ -856,3 +856,28 @@ h3 {
     font-size: 1rem;
   }
 }
+
+/* Poprawka: wymuś widoczność i zapobiegaj obcinaniu ikon na iOS Safari */
+.social .section-content ul {
+  overflow: visible !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.social .section-content ul li {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0; /* opcjonalnie dostosuj spacing */
+}
+
+.social .section-content ul li img {
+  display: block !important;
+  width: 70px !important;
+  height: 70px !important;
+  object-fit: contain;
+  border-radius: 50%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0); /* forcing GPU layer can poprawić rendering na iOS */
+  visibility: visible !important;
+}
