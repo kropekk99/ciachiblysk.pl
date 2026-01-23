@@ -484,29 +484,41 @@
 <script src="js/wow.min.js"></script> 
 
 <script>
-  // init wow + slider + video popup (Twoja istniejąca logika zachowana)
-  wow = new WOW();
-  wow.init();
+  // init wow + slider + video popup
+wow = new WOW();
+wow.init();
 
-  $(document).ready(function() {
-    $('#video-icon').on('click', function(e){
-      e.preventDefault();
-      $('.video-popup').css('display','flex');
-      $('.iframe-src').slideDown();
-    });
-    $('.video-popup').on('click', function(e){
-      var $target = e.target.nodeName;
-      var video_src = $(this).find('iframe').attr('src');
-      if ($target != 'IFRAME') {
-        $('.video-popup').fadeOut();
-        $('.iframe-src').slideUp();
-        $('.video-popup iframe').attr('src', " ");
-        $('.video-popup iframe').attr('src', video_src);
-      }
-    });
+$(document).ready(function() {
 
-    $('.slider').bxSlider({ pager: false });
+  $('#video-icon').on('click', function(e){
+    e.preventDefault();
+    $('.video-popup').css('display','flex');
+    $('.iframe-src').fadeIn();
+
+    // autoplay video po otwarciu
+    const video = $('.video-popup video').get(0);
+    if (video) {
+      video.currentTime = 0;
+      video.play();
+    }
   });
+
+  $('.video-popup').on('click', function(e){
+    if (!$(e.target).is('video')) {
+      const video = $('.video-popup video').get(0);
+
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+
+      $('.video-popup').fadeOut();
+      $('.iframe-src').fadeOut();
+    }
+  });
+
+});
+
 
   // -- NAVBAR: prosty, niezawodny skrypt do zmiany tła po scrollu --
   (function($){
@@ -552,6 +564,7 @@
 
 </body>
 </html>
+
 
 
 
