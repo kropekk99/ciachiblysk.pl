@@ -336,8 +336,8 @@ h8{
 	width: 100%;
 	height: 100%;
 	z-index: 99999;
-	background: rgba(0, 0, 0, 0.7);
-	display: none; /* KLUCZOWE */
+	background: rgba(0, 0, 0, 0.75);
+	display: none;
 	align-items: center;
 	justify-content: center;
 	padding: 20px;
@@ -346,18 +346,20 @@ h8{
 
 /* BLOK VIDEO */
 .video-popup .video-src {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: 100%;
-	max-width: 900px;
 }
 
 /* RAMKA VIDEO */
 .video-popup .iframe-src {
 	position: relative;
+	max-width: 420px; /* idealne pod pionowe video */
 	width: 100%;
-	max-width: 900px;
-	height: 80vh; /* zamiast aspect-ratio */
+	height: 80vh;
 	background: black;
-	border-radius: 12px;
+	border-radius: 16px;
 	overflow: hidden;
 	display: flex;
 	align-items: center;
@@ -366,12 +368,10 @@ h8{
 
 /* VIDEO */
 .video-popup video {
-	width: auto;
+	width: 100%;
 	height: 100%;
-	max-width: 100%;
 	object-fit: contain;
 	display: block;
-	margin: auto;
 }
 
 /* iframe fallback (jeśli kiedyś użyjesz YouTube) */
@@ -909,6 +909,7 @@ h3 {
   visibility: visible !important;
 
 }
+
 
 
 
