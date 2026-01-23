@@ -484,18 +484,13 @@
 <script src="js/wow.min.js"></script> 
 
 <script>
-  // init wow + slider + video popup
-wow = new WOW();
-wow.init();
-
 $(document).ready(function() {
 
+  // OTWIERANIE POPUPA
   $('#video-icon').on('click', function(e){
     e.preventDefault();
-    $('.video-popup').css('display','flex');
-    $('.iframe-src').fadeIn();
+    $('.video-popup').fadeIn();
 
-    // autoplay video po otwarciu
     const video = $('.video-popup video').get(0);
     if (video) {
       video.currentTime = 0;
@@ -503,6 +498,7 @@ $(document).ready(function() {
     }
   });
 
+  // ZAMYKANIE POPUPA (klik poza video)
   $('.video-popup').on('click', function(e){
     if (!$(e.target).is('video')) {
       const video = $('.video-popup video').get(0);
@@ -513,12 +509,10 @@ $(document).ready(function() {
       }
 
       $('.video-popup').fadeOut();
-      $('.iframe-src').fadeOut();
     }
   });
 
 });
-
 
   // -- NAVBAR: prosty, niezawodny skrypt do zmiany tła po scrollu --
   (function($){
@@ -564,6 +558,7 @@ $(document).ready(function() {
 
 </body>
 </html>
+
 
 
 
