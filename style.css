@@ -337,7 +337,7 @@ h8{
 	height: 100%;
 	z-index: 99999;
 	background: rgba(0, 0, 0, 0.7);
-	display: flex;
+	display: none; /* KLUCZOWE */
 	align-items: center;
 	justify-content: center;
 	padding: 20px;
@@ -906,4 +906,5 @@ h3 {
   visibility: visible !important;
 
 }
+
 
