@@ -298,22 +298,18 @@ h8{
 	color:#ffffff;
 	text-decoration:none;
 }
-
 .video-section {
 	background: url(images/video-bg.jpg) no-repeat fixed center;
 	background-size: cover;
 	overflow: hidden;
 }
-
 .video-overlay {
 	background: linear-gradient(to left, rgba(255, 0, 0, 0.9), rgba(255, 255, 255, 0.9));
 }
-
 .video-section h3 {
 	font-weight: 600;
 	font-size: 38px;
 }
-
 .video-section i {
 	display: block;
 	position: relative;
@@ -325,10 +321,8 @@ h8{
 	font-size: 30px;
 	line-height: 70px;
 	margin: 0 auto;
-	cursor: pointer;
+	cursor:pointer;
 }
-
-/* POPUP TŁO */
 .video-popup {
 	position: fixed;
 	top: 0;
@@ -336,45 +330,25 @@ h8{
 	width: 100%;
 	height: 100%;
 	z-index: 99999;
-	background: rgba(0, 0, 0, 0.75);
+	background: rgba(0, 0, 0, 0.5);
 	display: none;
-	align-items: center;
-	justify-content: center;
-	padding: 20px;
-	box-sizing: border-box;
+	align-content: center !important;
+	-ms-flex-line-pack: center !important;
+	-ms-flex-align: center !important;
+	align-items: center !important;
+	-ms-flex-pack: center !important;
+	justify-content: center !important;
 }
-
-/* BLOK VIDEO */
 .video-popup .video-src {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
-}
-
-/* RAMKA VIDEO */
-.video-popup .iframe-src {
 	position: relative;
-	max-width: 420px; /* idealne pod pionowe video */
-	width: 100%;
-	height: 80vh;
-	background: black;
-	border-radius: 16px;
-	overflow: hidden;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	width: 700px;
+	max-width: 80%;
 }
-
-/* VIDEO */
-.video-popup video {
+.video-popup .iframe-src {
 	width: 100%;
-	height: 100%;
-	object-fit: contain;
-	display: block;
+	position: relative;
+	display: none;
 }
-
-/* iframe fallback (jeśli kiedyś użyjesz YouTube) */
 .video-popup .iframe-src iframe {
 	position: absolute;
 	top: 0;
@@ -382,7 +356,6 @@ h8{
 	width: 100%;
 	height: 100%;
 }
-
 .single-feature {
 	margin-bottom: 80px;
 	margin-top: 40px;
@@ -907,9 +880,49 @@ h3 {
   -webkit-backface-visibility: hidden;
   transform: translateZ(0); /* forcing GPU layer can poprawić rendering na iOS */
   visibility: visible !important;
-
 }
 
-
-
-
+/* ===== PRZYCISK KALKULATORA (sekcja CENNIK) ===== */
+.calc-cta-wrapper {
+  margin: 10px 0 30px;
+}
+.calc-cta-btn {
+  display: inline-block;
+  padding: 1.1rem 2.8rem;
+  background: #000000;
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border: 2px solid #ff0000;
+  border-radius: 2rem;
+  box-shadow: 0 0 18px rgba(255, 0, 0, 0.35);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.calc-cta-btn i {
+  color: #ff0000;
+  margin-right: 8px;
+  transition: color 0.3s ease;
+}
+.calc-cta-btn:hover,
+.calc-cta-btn:focus {
+  background: #ff0000;
+  color: #ffffff;
+  text-decoration: none;
+  box-shadow: 0 0 28px rgba(255, 0, 0, 0.6);
+  transform: translateY(-2px);
+}
+.calc-cta-btn:hover i,
+.calc-cta-btn:focus i {
+  color: #ffffff;
+}
+.calc-cta-hint {
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 14px;
+}
+@media (max-width: 768px) {
+  .calc-cta-btn {
+    display: block;
+    padding: 1rem 1rem;
+    font-size: 1rem;
+  }
+}
