@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator zabezpieczenia - Ciach i Błysk - AutoDetailing</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="style.css"/>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="kalkulator.css"/>
+</head>
+<body>
+
+<!-- Nawigacja: logo i link prowadzą do strony głównej -->
+<nav class="navbar navbar-expand nav-scroll calc-navbar">
+  <div class="container">
+    <a class="navbar-brand navbar-logo" href="index.html" aria-label="Strona główna"><img src="images/logo.png" alt="Ciach i Błysk" class="logo-1"></a>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item"><a class="nav-link" href="index.html">← Wróć do strony głównej</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="calc-page">
+  <div class="container calc-container">
+    <header class="calc-header">
+      <h1>Kalkulator zabezpieczenia</h1>
+      <span class="calc-line"></span>
+      <p>Odpowiedz na kilka pytań, a otrzymasz orientacyjny koszt zabezpieczenia swojego samochodu.</p>
+    </header>
+
+    <div class="calc-progress-wrap" id="calcTop">
+      <ol class="calc-progress" id="calcProgress" aria-hidden="true"></ol>
+      <p class="calc-progress-label" id="calcProgressLabel" aria-live="polite"></p>
+    </div>
+
+    <section class="calc-stage" id="calcStage"></section>
+
+    <div class="calc-actions">
+      <button type="button" class="calc-btn calc-btn-ghost" id="calcBack" hidden>Wstecz</button>
+      <button type="button" class="calc-btn calc-btn-primary calc-next" id="calcNext" disabled>Dalej</button>
+    </div>
+  </div>
+</main>
+
+<script>
+/* =====================================================================
+   1. CENNIK  –  JEDYNE MIEJSCE, W KTÓRYM ZMIENIASZ CENY
+   ---------------------------------------------------------------------
+   UWAGA: poniższe kwoty są WYŁĄCZNIE PRZYKŁADOWE.
+   - carMultipliers: mnożnik zależny od wielkości auta
+   - pozostałe grupy: składowe ceny (min / max w zł), sumowane
+   Wynik = (protection + ppfType + coatingDurability) × carMultipliers
+   Element, którego nie ma w konfiguracji klienta, kosztuje 0.
+   Klucze (small, ppf, fullBody...) muszą odpowiadać kluczom opcji w sekcji 3.
+   ===================================================================== */
+const calculatorPrices = {
+
+    carMultipliers: {
+        small: 1.00,
+        medium: 1.25,
+        large: 1.50
+    },
+
+    protection: {
+        coating:    { min: 800,  max: 1200 },
+        ppf:        { min: 800,  max: 1200 },
+        ppfCoating: { min: 800,  max: 1200 }
+    },
+
+    ppfType: {
+        fullBody:       { min: 5000, max: 10000 },
+        fullFront:      { min: 4000, max: 6000 },
+        sensitiveZones: { min: 400,  max: 1000 }
+    },
+
+    coatingDurability: {
+        oneYear:    { min: 600,  max: 800 },
+        threeYears: { min: 1000, max: 1500 },
+        fiveYears:  { min: 2000, max: 3000 },
+        sevenYears: { min: 2700, max: 3700 }
+    }
+};
+
+/* ---------------------------------------------------------------------
+   KOREKTY CEN DLA WYBRANYCH KONFIGURACJI
+   Gdy WSZYSTKIE wybory z `when` pasują do konfiguracji klienta, do ceny
+   dodawane są wartości `min` i `max` (ujemne = zniżka, dodatnie = dopłata).
+   Korekta jest doliczana PRZED mnożnikiem auta (tak jak pozostałe składowe).
+   Klucze w `when` = id kroku, wartości = klucz opcji (patrz sekcja 3).
+   Kolejną korektę dodajesz jako kolejny wpis w tablicy.
+   --------------------------------------------------------------------- */
+const calculatorAdjustments = [
+    {
+        // część powłoki nie jest wykorzystywana na folię PPF przy Full Front
+        when: { protection: 'ppfCoating', ppfType: 'fullFront' },
+        min: -1000,
+        max: -1000
+    }
+];
+
+/* =====================================================================
+   2. USTAWIENIA OGÓLNE
+   ===================================================================== */
+const ROUND_TO = 1;            // zaokrąglenie wyniku (1 = do złotówki, 10 = do 10 zł, 50 = do 50 zł)
+const AUTO_ADVANCE = true;     // true = po kliknięciu karty kalkulator sam przechodzi dalej
+const IMAGE_DIR = 'images/calculator/';   // katalog z grafikami
+
+const CONTACT = {
+    phone: '+48728974902',
+    phoneLabel: '+48 728 974 902',
+    email: 'ciachiblysk@gmail.com',
+    address: 'Pomocna 2a, 15-182 Białystok',
+    hours: 'Pon – Pt 8:00 – 16:00'
+};
+
+/* =====================================================================
+   3. KROKI, TEKSTY I GRAFIKI
+   ---------------------------------------------------------------------
+   Każdy krok = jedno pytanie. Kolejność w tablicy = kolejność pytań.
+   - id            nazwa wyboru w pamięci kalkulatora
+   - priceGroup    grupa z calculatorPrices, z której pochodzi cena
+   - role          'multiplier' (mnożnik) lub 'additive' (składowa ceny)
+   - visibleWhen   (opcjonalnie) kiedy krok ma się pojawić
+   - options       klucz opcji = klucz w calculatorPrices[priceGroup]
+       label        tytuł karty        description  opis pod tytułem
+       image        nazwa pliku w images/calculator/    alt  opis grafiki
+       summary      (opcjonalnie) tekst w podsumowaniu
+   Nowy krok (np. zabezpieczenie felg) = nowa grupa cen + nowy wpis poniżej.
+   ===================================================================== */
+const protectionIs = (...values) => s => !s.protection || values.includes(s.protection);
+
+const calculatorSteps = [
+    {
+        id: 'car',
+        priceGroup: 'carMultipliers',
+        role: 'multiplier',
+        title: 'Jaki samochód chcesz zabezpieczyć?',
+        hint: 'Wybierz wielkość auta.',
+        summaryLabel: 'Samochód',
+        imageFit: 'contain',
+        options: {
+            small:  { label: 'Małe',    summary: 'Mały',    description: 'np. Fiat 500 / VW Polo',        image: 'car-small.png',  alt: 'Mały samochód' },
+            medium: { label: 'Średnie', summary: 'Średni',  description: 'np. VW Golf / Skoda Octavia',   image: 'car-medium.png', alt: 'Średni samochód' },
+            large:  { label: 'Duże',    summary: 'Duży',    description: 'np. BMW X5 / Audi Q7',          image: 'car-large.png',  alt: 'Duży samochód' }
+        }
+    },
+    {
+        id: 'protection',
+        priceGroup: 'protection',
+        role: 'additive',
+        title: 'Wybierz rodzaj zabezpieczenia',
+        hint: 'Co chcesz zabezpieczyć w swoim aucie?',
+        summaryLabel: 'Zabezpieczenie',
+        options: {
+            coating:    { label: 'Powłoka',             description: 'Trwała warstwa ochronna lakieru. Auto łatwiej się myje, a lakier lepiej znosi sól i zarysowania.', image: 'coating.png',     alt: 'Powłoka ochronna' },
+            ppf:        { label: 'Folia PPF',           description: 'Przezroczysta folia ochronna chroniąca lakier przed odpryskami i uszkodzeniami mechanicznymi.',   image: 'ppf.png',         alt: 'Folia PPF' },
+            ppfCoating: { label: 'Folia PPF + powłoka', description: 'Najlepsza ochrona: folia na wybranym zakresie auta i powłoka dla pozostałych elementów.',       image: 'ppf-coating.png', alt: 'Folia PPF i powłoka' }
+        }
+    },
+    {
+        id: 'ppfType',
+        priceGroup: 'ppfType',
+        role: 'additive',
+        visibleWhen: protectionIs('ppf', 'ppfCoating'),
+        title: 'Jaki zakres zabezpieczenia folią PPF wybierasz?',
+        hint: 'Im większy zakres, tym pełniejsza ochrona.',
+        summaryLabel: 'PPF',
+        options: {
+            //fullBody:       { label: 'Full Body',       description: 'Folia na całej powierzchni karoserii samochodu (maksymalna ochrona przed szkodami parkingowymi, odpryskami i UV).',                              image: 'ppf-full-body.png',  alt: 'Folia PPF – Full Body' },
+            fullFront:      { label: 'Full Front',      description: 'Folia na całym przodzie auta: maska, zderzak, błotniki, lusterka, czoło dachu.',       image: 'ppf-full-front.png', alt: 'Folia PPF – Full Front' },
+            sensitiveZones: { label: 'Strefy wrażliwe', description: 'Folia na miejscach najbardziej podatnych na uszkodzenia: wnęki klamek, ranty drzwi, progi wewnętrzne, próg bagażnika czy piano black na słupkach drzwi.',               image: 'ppf-sensitive.png',  alt: 'Folia PPF – strefy wrażliwe' }
+        }
+    },
+    {
+        id: 'coatingDurability',
+        priceGroup: 'coatingDurability',
+        role: 'additive',
+        visibleWhen: protectionIs('coating', 'ppfCoating'),
+        title: 'Wybierz trwałość powłoki',
+        hint: 'Dłuższa trwałość to wyższa odporność i wyższa cena.',
+        summaryLabel: 'Powłoka',
+        options: {
+            oneYear:    { label: '1 rok – ceramika',    summary: '1 rok - Ceramika',    description: 'Powłoka ceramiczna, trwałość do 1 roku.',     image: '1.png',  alt: 'Powłoka na 1 rok' },
+            threeYears: { label: '3 lata – ceramika',   summary: '3 lata - Ceramika',   description: 'Powłoka ceramiczna, trwałość do 3 lat.',      image: '3.png', alt: 'Powłoka na 3 lata' },
+            fiveYears:  { label: '5 lat – elastomer',   summary: '5 lat - Elastomer',   description: 'Powłoka elastomerowa, trwałość do 5 lat.',    image: '5.png', alt: 'Powłoka na 5 lat' },
+            sevenYears: { label: '7 lat – elastomer',   summary: '7 lat - Elastomer',   description: 'Powłoka elastomerowa, trwałość do 7 lat.',    image: '7.png', alt: 'Powłoka na 7 lat' }
+        }
+    }
+];
+
+/* =====================================================================
+   4. LOGIKA OBLICZANIA CENY (nie wymaga edycji przy zmianie cen)
+   ===================================================================== */
+function calculatePrice(selection) {
+    let min = 0, max = 0, multiplier = 1;
+    visibleSteps().forEach(step => {
+        const choice = selection[step.id];
+        const price = choice && calculatorPrices[step.priceGroup][choice];
+        if (price === undefined || price === null) return;   // brak wyboru / brak ceny = 0
+        if (step.role === 'multiplier') {
+            multiplier = price;
+        } else {
+            min += price.min;
+            max += price.max;
+        }
+    });
+    // korekty konfiguracji (zniżki / dopłaty) – doliczane przed mnożnikiem auta
+    calculatorAdjustments.forEach(rule => {
+        const matches = Object.keys(rule.when).every(key => selection[key] === rule.when[key]);
+        if (matches) {
+            min += rule.min;
+            max += rule.max;
+        }
+    });
+    min = Math.max(0, min);
+    max = Math.max(0, max);
+    return { min: min * multiplier, max: max * multiplier };   // min i max liczone osobno
+}
+
+// jedyne miejsce zaokrąglania i formatowania ceny
+function formatPrice(min, max) {
+    const f = v => String(Math.round(v / ROUND_TO) * ROUND_TO).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
+    return f(min) + ' – ' + f(max) + ' zł';
+}
+
+/* =====================================================================
+   5. OBSŁUGA KROKÓW I WIDOKÓW
+   ===================================================================== */
+const state = {};            // wybrane opcje: { car: 'small', protection: 'ppf', ... }
+let current = 0;             // numer kroku wśród widocznych kroków (= ich liczba → wynik)
+let advanceTimer = null;
+
+const stage = document.getElementById('calcStage');
+const progress = document.getElementById('calcProgress');
+const progressLabel = document.getElementById('calcProgressLabel');
+const backBtn = document.getElementById('calcBack');
+const nextBtn = document.getElementById('calcNext');
+
+const visibleSteps = () => calculatorSteps.filter(s => !s.visibleWhen || s.visibleWhen(state));
+
+// usuwa wybory z kroków, które przestały być aktualne
+function pruneState() {
+    const visible = visibleSteps().map(s => s.id);
+    calculatorSteps.forEach(s => { if (!visible.includes(s.id)) delete state[s.id]; });
+}
+
+function renderProgress(steps, isResult) {
+    progress.innerHTML = steps.map((s, i) =>
+        '<li class="' + (isResult || i < current ? 'done' : i === current ? 'active' : '') + '"><span class="calc-dot"></span></li>'
+    ).join('');
+    progressLabel.textContent = isResult ? 'Podsumowanie' : 'Krok ' + (current + 1) + ' z ' + steps.length;
+}
+
+function updateButtons(steps) {
+    const isResult = current >= steps.length;
+    backBtn.hidden = current === 0;
+    nextBtn.hidden = isResult;
+    if (!isResult) {
+        nextBtn.disabled = !state[steps[current].id];
+        nextBtn.textContent = current === steps.length - 1 ? 'Pokaż wycenę' : 'Dalej';
+    }
+}
+
+function renderStep(step) {
+    const entries = Object.entries(step.options);
+    stage.innerHTML =
+        '<h2 class="calc-question" tabindex="-1" id="calcQuestion">' + step.title + '</h2>' +
+        '<p class="calc-question-hint">' + (step.hint || '') + '</p>' +
+        '<div class="calculator-options cols-' + entries.length + (step.imageFit === 'contain' ? ' fit-contain' : '') + '" role="group" aria-labelledby="calcQuestion">' +
+        entries.map(([id, o]) => {
+            const on = state[step.id] === id;
+            return '<button type="button" class="calculator-option' + (on ? ' selected' : '') + '" data-id="' + id + '" aria-pressed="' + on + '">' +
+                '<span class="calculator-option-image"><img src="' + IMAGE_DIR + o.image + '" alt="' + (o.alt || o.label) + '" loading="lazy" onerror="this.parentNode.classList.add(\'is-missing\')"></span>' +
+                '<span class="calculator-option-check"><i class="fas fa-check"></i></span>' +
+                '<span class="calculator-option-body"><span class="calculator-option-title">' + o.label + '</span>' +
+                '<span class="calculator-option-desc">' + (o.description || '') + '</span></span>' +
+                '</button>';
+        }).join('') + '</div>';
+}
+
+function renderResult(steps) {
+    const price = calculatePrice(state);
+    const rows = steps.map(s => {
+        const o = s.options[state[s.id]];
+        return '<li><span>' + s.summaryLabel + '</span><strong>' + (o.summary || o.label) + '</strong></li>';
+    }).join('');
+    stage.innerHTML =
+        '<div class="calc-result">' +
+        '<h2 class="calc-question" tabindex="-1">Szacowana wycena</h2>' +
+        '<p class="calc-question-hint" style="margin-bottom:0">Dla wybranej konfiguracji orientacyjny koszt zabezpieczenia samochodu wynosi:</p>' +
+        '<div class="calc-price">' + formatPrice(price.min, price.max) + '</div>' +
+        '<ul class="calc-summary">' + rows + '</ul>' +
+        '<p class="calc-disclaimer">Podana cena ma charakter orientacyjny. Ostateczna wycena może zależeć m.in. od stanu lakieru, modelu samochodu oraz zakresu prac przygotowawczych. Zapraszamy do kontaktu w celu umówienia się na dokonanie bardziej szczegółowej wyceny.</p>' +
+        '<div class="calc-contact-box">' +
+        '<h3>CHCESZ DOKŁADNĄ WYCENĘ?</h3><p>Skontaktuj się z nami</p>' +
+        '<ul class="calc-contact-info">' +
+        '<li><i class="fa fa-phone"></i><a href="tel:' + CONTACT.phone + '">' + CONTACT.phoneLabel + '</a></li>' +
+        '<li><i class="fa fa-envelope"></i><a href="mailto:' + CONTACT.email + '">' + CONTACT.email + '</a></li>' +
+        '<li><i class="fa fa-map-marker"></i><span>' + CONTACT.address + '</span></li>' +
+        '<li><i class="fa fa-clock"></i><span>' + CONTACT.hours + '</span></li>' +
+        '</ul></div>' +
+        '<button type="button" class="calc-btn calc-btn-ghost" id="calcRestart"><i class="fa fa-repeat"></i> Zacznij od nowa</button>' +
+        '</div>';
+}
+
+function render(direction, initial) {
+    const steps = visibleSteps();
+    const isResult = current >= steps.length;
+    renderProgress(steps, isResult);
+    if (isResult) renderResult(steps); else renderStep(steps[current]);
+    updateButtons(steps);
+
+    // płynne przejście
+    stage.classList.remove('enter', 'back');
+    void stage.offsetWidth;
+    stage.classList.add('enter');
+    if (direction < 0) stage.classList.add('back');
+
+    if (!initial) {
+        const heading = stage.querySelector('.calc-question');
+        if (heading) heading.focus({ preventScroll: true });
+        const top = document.getElementById('calcTop').getBoundingClientRect().top + window.pageYOffset - 90;
+        if (window.pageYOffset > top) window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+}
+
+function select(id) {
+    const steps = visibleSteps();
+    state[steps[current].id] = id;
+    pruneState();                           // wyzeruj niepasujące, późniejsze wybory
+    const updated = visibleSteps();
+    stage.querySelectorAll('.calculator-option').forEach(card => {
+        const on = card.dataset.id === id;
+        card.classList.toggle('selected', on);
+        card.setAttribute('aria-pressed', on);
+    });
+    renderProgress(updated, false);         // liczba kroków mogła się zmienić
+    updateButtons(updated);
+    clearTimeout(advanceTimer);
+    if (AUTO_ADVANCE) advanceTimer = setTimeout(() => go(1), 320);
+}
+
+function go(direction) {
+    clearTimeout(advanceTimer);
+    const steps = visibleSteps();
+    if (direction > 0 && (current >= steps.length || !state[steps[current].id])) return;
+    current = Math.max(0, Math.min(steps.length, current + direction));
+    render(direction);
+}
+
+function restart() {
+    clearTimeout(advanceTimer);
+    Object.keys(state).forEach(k => delete state[k]);
+    current = 0;
+    render(-1);
+}
+
+stage.addEventListener('click', e => {
+    const card = e.target.closest('.calculator-option');
+    if (card) { select(card.dataset.id); return; }
+    if (e.target.closest('#calcRestart')) restart();
+});
+backBtn.addEventListener('click', () => go(-1));
+nextBtn.addEventListener('click', () => go(1));
+
+render(1, true);
+</script>
+</body>
+</html>
