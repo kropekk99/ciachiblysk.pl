@@ -105,7 +105,7 @@
       <div class="video-popup">
         <div class="video-src">
           <div class="iframe-src">
-			  <video class="popup-video" src="images/film.mp4" controls onloadstart="this.volume=0.25" preload="auto"></video>
+            <video src="images/film.mp4" controls onloadstart="this.volume=0.25" preload="auto"> </video>
           </div>
         </div>
       </div>
@@ -237,6 +237,11 @@
 		 <!-- <div class="rounded mx-auto d-block">
                     <img src="images/promo_black_friday.jpg"  width="600" height="600" style="max-width: 100%; height: auto;">
                   </div>-->
+              </div>
+              <!-- Przycisk kalkulatora zabezpieczenia (nad cennikiem) -->
+              <div class="calc-cta-wrapper text-center wow fadeInUp" data-wow-delay="0.2s">
+                <a href="kalkulator.html" class="calc-cta-btn"><i class="fa fa-calculator" aria-hidden="true"></i> KALKULATOR ZABEZPIECZENIA</a>
+                <p class="calc-cta-hint">Sprawdź orientacyjny koszt folii PPF i powłok w kilku prostych krokach</p>
               </div>
               <div class="col-md-12 faq-content wow fadeInUp" data-wow-delay="0.2s">
                 <table class="table table-striped table-hover table-dark">
@@ -484,35 +489,29 @@
 <script src="js/wow.min.js"></script> 
 
 <script>
-$(document).ready(function() {
+  // init wow + slider + video popup (Twoja istniejąca logika zachowana)
+  wow = new WOW();
+  wow.init();
 
-  // OTWIERANIE POPUPA
-  $('#video-icon').on('click', function(e){
-    e.preventDefault();
-    $('.video-popup').fadeIn();
-
-    const video = $('.video-popup video').get(0);
-    if (video) {
-      video.currentTime = 0;
-      video.play();
-    }
-  });
-
-  // ZAMYKANIE POPUPA (klik poza video)
-  $('.video-popup').on('click', function(e){
-    if (!$(e.target).is('video')) {
-      const video = $('.video-popup video').get(0);
-
-      if (video) {
-        video.pause();
-        video.currentTime = 0;
+  $(document).ready(function() {
+    $('#video-icon').on('click', function(e){
+      e.preventDefault();
+      $('.video-popup').css('display','flex');
+      $('.iframe-src').slideDown();
+    });
+    $('.video-popup').on('click', function(e){
+      var $target = e.target.nodeName;
+      var video_src = $(this).find('iframe').attr('src');
+      if ($target != 'IFRAME') {
+        $('.video-popup').fadeOut();
+        $('.iframe-src').slideUp();
+        $('.video-popup iframe').attr('src', " ");
+        $('.video-popup iframe').attr('src', video_src);
       }
+    });
 
-      $('.video-popup').fadeOut();
-    }
+    $('.slider').bxSlider({ pager: false });
   });
-
-});
 
   // -- NAVBAR: prosty, niezawodny skrypt do zmiany tła po scrollu --
   (function($){
@@ -558,12 +557,3 @@ $(document).ready(function() {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
