@@ -272,10 +272,16 @@
 .calc-result { text-align: center; }
 .calc-result .calc-question { text-transform: uppercase; }
 .calc-price {
-  margin: 14px 0 26px;
+  margin: 14px 0 0;
   font-size: clamp(1.8rem, 7vw, 3.6rem);
   font-weight: 700;
   line-height: 1.15;
+  color: #ffffff;
+}
+/* dopisek „BRUTTO” pod kwotą – ten sam kolor co kwota, blisko niej */
+.calc-price-note {
+  margin: 2px 0 26px;
+  text-align: center;
   color: #ffffff;
 }
 .calc-summary {
